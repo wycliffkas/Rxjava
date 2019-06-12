@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import io.reactivex.Flowable;
-import io.reactivex.FlowableSubscriber;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
@@ -21,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView text;
 
+    private CompositeDisposable disposable = new CompositeDisposable();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +31,6 @@ public class MainActivity extends AppCompatActivity {
         //takes a list of objects and turns em in an observable
         //thread to do the work on
         //thread to display results
-
-
-
-
 
         Observable<Task> taskObservable = Observable
                 .fromIterable(DataSource.createTasksList())
@@ -60,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSubscribe(Disposable d) {
                 Log.d(TAG, "onSubscribe: called");
+
+                disposable.add(d);
 
             }
 
@@ -89,5 +88,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //clearing observers
+        disposable.clear();
+    }
 }
