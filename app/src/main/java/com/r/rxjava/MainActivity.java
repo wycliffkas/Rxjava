@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import io.reactivex.Flowable;
+import io.reactivex.FlowableSubscriber;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
@@ -28,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
         //takes a list of objects and turns em in an observable
         //thread to do the work on
         //thread to display results
+
+
+
+
+
         Observable<Task> taskObservable = Observable
                 .fromIterable(DataSource.createTasksList())
                 .subscribeOn(Schedulers.io())
@@ -47,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //creating a new observer that subscribes to the observable
+
         taskObservable.subscribe(new Observer<Task>() {
             //called as soon as observable is subscribed to
             @Override
@@ -60,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
             public void onNext(Task task) {
                 Log.d(TAG, "Thread: " + Thread.currentThread().getName());
                 Log.d(TAG, "Description: " + task.getDescription());
+                
+
 //                try {
 //                    Thread.sleep(1000);
 //                } catch (InterruptedException e) {
@@ -78,4 +88,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
