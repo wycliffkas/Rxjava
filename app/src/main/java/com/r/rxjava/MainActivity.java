@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.TextView;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -35,15 +37,11 @@ public class MainActivity extends AppCompatActivity {
         Observable<Task> taskObservable = Observable
                 .fromIterable(DataSource.createTasksList())
                 .subscribeOn(Schedulers.io())
+                //filters and only emits completed tasks
                 .filter(new Predicate<Task>() {
                     @Override
                     public boolean test(Task task) throws Exception {
                         Log.d(TAG, "Thread: " + Thread.currentThread().getName());
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                         return task.isComplete();
                     }
                 })
@@ -67,13 +65,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNext(Task task) {
                 Log.d(TAG, "Thread: " + Thread.currentThread().getName());
                 Log.d(TAG, "Description: " + task.getDescription());
-                
 
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
 
             @Override
@@ -86,6 +78,160 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "On complete");
             }
         });
+
+
+
+
+
+        //Creating an Observable from a single object
+
+
+        final Task task = new Task("walk the dog", false, 4);
+
+        //create observable
+        Observable<Task> singleTaskObservable = Observable
+                .create(new ObservableOnSubscribe<Task>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Task> emitter) throws Exception {
+                        if(!emitter.isDisposed()){
+                            emitter.onNext(task);
+                            emitter.onComplete();
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        //subscribe to the observable and get emitted data
+
+        singleTaskObservable.subscribe(new Observer<Task>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Task task) {
+                Log.d(TAG, "Description: " + task.getDescription());
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+        //Creating an Observable from a list of objects
+
+
+        Observable<Task> taskListObservable = Observable
+                .create(new ObservableOnSubscribe<Task>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<Task> emitter) throws Exception {
+
+                        for(Task task: DataSource.createTasksList()){
+                            if(!emitter.isDisposed()){
+                                emitter.onNext(task);
+                            }
+                        }
+
+                        if(!emitter.isDisposed()){
+                            emitter.onComplete();
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        taskListObservable.subscribe(new Observer<Task>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Task task) {
+                Log.d(TAG, "Description: " + task.getDescription());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+        // just operator
+
+        Observable.just("first", "second", "third", "fourth", "fifth",
+                "sixth", "seventh", "eigth", "ninth", "tenth")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.d(TAG, "onNext:"+ s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+        // range and repeat operator
+
+        Observable.range(0,20)
+                .repeat(2)
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        Log.d(TAG, "onNext:"+ integer);
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+
     }
 
     @Override
