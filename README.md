@@ -8,3 +8,4 @@ using RxJava and RxAndroid
 4. Subscribe an Observer to the Observable and view the results
 5. using create,just,range and repeat operator
 6. interval and timer operators
+7. fromArray, fromIterable, fromCallable

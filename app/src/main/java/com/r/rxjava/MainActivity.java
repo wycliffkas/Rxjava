@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 //                });
 
 
-        //observable that emits after certain time interval
+        //interval operator - observable that emits after certain time interval
 
 //        Observable<Long> intervalObservable = Observable
 //                .interval(1, TimeUnit.SECONDS)
@@ -266,24 +267,126 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
 
-        Observable<Long> timerObservable = Observable
-                .timer(1, TimeUnit.MINUTES)
+        //timer operator - observable that emits after certain time delay
+
+//        Observable<Long> timerObservable = Observable
+//                .timer(1, TimeUnit.MINUTES)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//
+//        timerObservable.subscribe(new Observer<Long>() {
+//
+//            long time = 0;
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//                time = System.currentTimeMillis() / 1000;
+//
+//            }
+//
+//            @Override
+//            public void onNext(Long aLong) {
+//                Log.d(TAG, "time delayed: " + ((System.currentTimeMillis()/1000) - time));
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+
+
+        //fromArray Operator
+
+        Task[] list = new Task[5];
+        list[0] = (new Task("Take out the trash", true, 3));
+        list[1] = (new Task("Walk the dog", false, 2));
+        list[2] = (new Task("Make my bed", true, 1));
+        list[3] = (new Task("Unload the dishwasher", false, 0));
+        list[4] = (new Task("Make dinner", true, 5));
+
+        Observable<Task> arrayObservable = Observable
+                .fromArray(list)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        timerObservable.subscribe(new Observer<Long>() {
-
-            long time = 0;
+        arrayObservable.subscribe(new Observer<Task>() {
             @Override
             public void onSubscribe(Disposable d) {
-                time = System.currentTimeMillis() / 1000;
 
             }
 
             @Override
-            public void onNext(Long aLong) {
-                Log.d(TAG, "time delayed: " + ((System.currentTimeMillis()/1000) - time));
+            public void onNext(Task task) {
+                Log.d(TAG, "onNext: " + task.getDescription());
+            }
 
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+        //fromIterable Operator
+
+
+        Observable<Task> arrayObservable = Observable
+                .fromIterable(DataSource.createTasksList())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        arrayObservable.subscribe(new Observer<Task>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Task task) {
+                Log.d(TAG, "onNext: " + task.getDescription());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+        //callable operator
+
+        Observable<Task> callable = Observable
+                .fromCallable(new Callable<Task>() {
+                    @Override
+                    public Task call() throws Exception {
+                        return MyDatabase.getTask();
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        callable.subscribe(new Observer<Task>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Task task) {
+                Log.d(TAG, "onNext: : " + task.getDescription());
             }
 
             @Override
