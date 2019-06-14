@@ -55,12 +55,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSubscribe(Disposable d) {
                 Log.d(TAG, "onSubscribe: called");
-
                 disposable.add(d);
-
             }
 
-            //called as observer iterates thru observables
+            //called as observer iterates through observables
             @Override
             public void onNext(Task task) {
                 Log.d(TAG, "Thread: " + Thread.currentThread().getName());
