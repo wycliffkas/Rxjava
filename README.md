@@ -7,4 +7,5 @@ using RxJava and RxAndroid
 3. Designate what thread to do the work on and what thread to emit the results to
 4. Subscribe an Observer to the Observable and view the results
 5. using create,just,range and repeat operator
-6. interval and timer operators
+6. Interval and timer operators
+7. Filter
