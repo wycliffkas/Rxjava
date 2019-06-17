@@ -266,24 +266,100 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
 
-        Observable<Long> timerObservable = Observable
-                .timer(1, TimeUnit.MINUTES)
+
+        // Timer operator
+
+//        Observable<Long> timerObservable = Observable
+//                .timer(1, TimeUnit.MINUTES)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//
+//        timerObservable.subscribe(new Observer<Long>() {
+//
+//            long time = 0;
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//                time = System.currentTimeMillis() / 1000;
+//
+//            }
+//
+//            @Override
+//            public void onNext(Long aLong) {
+//                Log.d(TAG, "time delayed: " + ((System.currentTimeMillis()/1000) - time));
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+
+        // Filter operator
+
+        Observable<Task> filterObservable = Observable
+                .fromIterable(DataSource.createTasksList())
+                .filter(new Predicate<Task>() {
+                    @Override
+                    public boolean test(Task task) throws Exception {
+                        if(task.getDescription().equals("Walk the dog")){
+                            return true;
+                        }
+                        return false;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        timerObservable.subscribe(new Observer<Long>() {
-
-            long time = 0;
+        filterObservable.subscribe(new Observer<Task>() {
             @Override
             public void onSubscribe(Disposable d) {
-                time = System.currentTimeMillis() / 1000;
 
             }
 
             @Override
-            public void onNext(Long aLong) {
-                Log.d(TAG, "time delayed: " + ((System.currentTimeMillis()/1000) - time));
+            public void onNext(Task task) {
+                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+            }
 
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+        // filter by boolean value
+
+        Observable<Task> booleanObservable = Observable
+                .fromIterable(DataSource.createTasksList())
+                .filter(new Predicate<Task>() {
+                    @Override
+                    public boolean test(Task task) throws Exception {
+                        return task.isComplete();
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        booleanObservable.subscribe(new Observer<Task>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Task task) {
+                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
             }
 
             @Override
