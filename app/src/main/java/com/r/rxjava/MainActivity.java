@@ -14,6 +14,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
@@ -302,56 +303,89 @@ public class MainActivity extends AppCompatActivity {
 
         // Filter operator
 
-        Observable<Task> filterObservable = Observable
-                .fromIterable(DataSource.createTasksList())
-                .filter(new Predicate<Task>() {
-                    @Override
-                    public boolean test(Task task) throws Exception {
-                        if(task.getDescription().equals("Walk the dog")){
-                            return true;
-                        }
-                        return false;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        filterObservable.subscribe(new Observer<Task>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(Task task) {
-                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
+//        Observable<Task> filterObservable = Observable
+//                .fromIterable(DataSource.createTasksList())
+//                .filter(new Predicate<Task>() {
+//                    @Override
+//                    public boolean test(Task task) throws Exception {
+//                        if(task.getDescription().equals("Walk the dog")){
+//                            return true;
+//                        }
+//                        return false;
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//
+//        filterObservable.subscribe(new Observer<Task>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Task task) {
+//                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
 
         // filter by boolean value
 
-        Observable<Task> booleanObservable = Observable
-                .fromIterable(DataSource.createTasksList())
-                .filter(new Predicate<Task>() {
-                    @Override
-                    public boolean test(Task task) throws Exception {
-                        return task.isComplete();
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+//        Observable<Task> booleanObservable = Observable
+//                .fromIterable(DataSource.createTasksList())
+//                .filter(new Predicate<Task>() {
+//                    @Override
+//                    public boolean test(Task task) throws Exception {
+//                        return task.isComplete();
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//
+//        booleanObservable.subscribe(new Observer<Task>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Task task) {
+//                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
 
-        booleanObservable.subscribe(new Observer<Task>() {
+
+        //filter by distinct
+        Observable<Task> distinctObservable = Observable
+                .fromIterable(DataSource.createTasksList())
+                .distinct(new Function<Task, String>() {
+                    @Override
+                    public String apply(Task task) throws Exception {
+                        return task.getDescription();
+                    }
+                });
+
+        distinctObservable.subscribe(new Observer<Task>() {
             @Override
             public void onSubscribe(Disposable d) {
 
@@ -359,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNext(Task task) {
-                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+                Log.d(TAG, "onNext: " + task.getDescription());
             }
 
             @Override

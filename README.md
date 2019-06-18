@@ -9,3 +9,4 @@ using RxJava and RxAndroid
 5. using create,just,range and repeat operator
 6. Interval and timer operators
 7. Filter
+8. Distinct
