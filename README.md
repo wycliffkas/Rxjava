@@ -8,4 +8,5 @@ using RxJava and RxAndroid
 4. Subscribe an Observer to the Observable and view the results
 5. using create,just,range and repeat operator
 6. Interval and timer operators
-7. Filter
+7. Filter operator
+8. Take and Take while operators
