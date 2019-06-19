@@ -10,3 +10,4 @@ using RxJava and RxAndroid
 6. Interval and timer operators
 7. Filter operator
 8. Take and Take while operators
+9. Map
