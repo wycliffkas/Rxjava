@@ -14,6 +14,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
@@ -377,54 +378,89 @@ public class MainActivity extends AppCompatActivity {
 
     //Take Operator
 
-        Observable<Task> takeObservable = Observable
-                .fromIterable(DataSource.createTasksList())
-                .take(3)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-        takeObservable.subscribe(new Observer<Task>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(Task task) {
-                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
+//        Observable<Task> takeObservable = Observable
+//                .fromIterable(DataSource.createTasksList())
+//                .take(3)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//        takeObservable.subscribe(new Observer<Task>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Task task) {
+//                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
 
         //TakeWhile Operator
 
-        Observable<Task> takeWhileObservable = Observable
-                .fromIterable(DataSource.createTasksList())
-                .takeWhile(new Predicate<Task>() {
+//        Observable<Task> takeWhileObservable = Observable
+//                .fromIterable(DataSource.createTasksList())
+//                .takeWhile(new Predicate<Task>() {
+//                    @Override
+//                    public boolean test(Task task) throws Exception {
+//                        return task.isComplete();
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//        takeWhileObservable.subscribe(new Observer<Task>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Task task) {
+//                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+
+
+        //Map Operator
+
+        Observable<Integer> intObservable = Observable
+                .range(1, 10)
+                .map(new Function<Integer, Integer>() {
                     @Override
-                    public boolean test(Task task) throws Exception {
-                        return task.isComplete();
+                    public Integer apply(Integer integer) throws Exception {
+                        return integer * 2;
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-        takeWhileObservable.subscribe(new Observer<Task>() {
+        intObservable.subscribe(new Observer<Integer>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onNext(Task task) {
-                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+            public void onNext(Integer integer) {
+                Log.d(TAG, "onNext: " + integer);
             }
 
             @Override
