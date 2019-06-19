@@ -302,21 +302,87 @@ public class MainActivity extends AppCompatActivity {
 
         // Filter operator
 
-        Observable<Task> filterObservable = Observable
+//        Observable<Task> filterObservable = Observable
+//                .fromIterable(DataSource.createTasksList())
+//                .filter(new Predicate<Task>() {
+//                    @Override
+//                    public boolean test(Task task) throws Exception {
+//                        if(task.getDescription().equals("Walk the dog")){
+//                            return true;
+//                        }
+//                        return false;
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//
+//        filterObservable.subscribe(new Observer<Task>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Task task) {
+//                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+
+        // filter by boolean value
+
+//        Observable<Task> booleanObservable = Observable
+//                .fromIterable(DataSource.createTasksList())
+//                .filter(new Predicate<Task>() {
+//                    @Override
+//                    public boolean test(Task task) throws Exception {
+//                        return task.isComplete();
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//
+//        booleanObservable.subscribe(new Observer<Task>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Task task) {
+//                Log.d(TAG, "onNext: This task matches the description: " + task.getDescription());
+//            }
+//
+//
+//        @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+
+
+    //Take Operator
+
+        Observable<Task> takeObservable = Observable
                 .fromIterable(DataSource.createTasksList())
-                .filter(new Predicate<Task>() {
-                    @Override
-                    public boolean test(Task task) throws Exception {
-                        if(task.getDescription().equals("Walk the dog")){
-                            return true;
-                        }
-                        return false;
-                    }
-                })
+                .take(3)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-
-        filterObservable.subscribe(new Observer<Task>() {
+        takeObservable.subscribe(new Observer<Task>() {
             @Override
             public void onSubscribe(Disposable d) {
 
@@ -338,11 +404,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // filter by boolean value
+        //TakeWhile Operator
 
-        Observable<Task> booleanObservable = Observable
+        Observable<Task> takeWhileObservable = Observable
                 .fromIterable(DataSource.createTasksList())
-                .filter(new Predicate<Task>() {
+                .takeWhile(new Predicate<Task>() {
                     @Override
                     public boolean test(Task task) throws Exception {
                         return task.isComplete();
@@ -350,8 +416,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-
-        booleanObservable.subscribe(new Observer<Task>() {
+        takeWhileObservable.subscribe(new Observer<Task>() {
             @Override
             public void onSubscribe(Disposable d) {
 
@@ -372,7 +437,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
 
 
