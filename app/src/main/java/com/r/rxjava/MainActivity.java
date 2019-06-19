@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -442,25 +443,60 @@ public class MainActivity extends AppCompatActivity {
 
         //Map Operator
 
-        Observable<Integer> intObservable = Observable
-                .range(1, 10)
-                .map(new Function<Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer integer) throws Exception {
-                        return integer * 2;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-        intObservable.subscribe(new Observer<Integer>() {
+//        Observable<Integer> intObservable = Observable
+//                .range(1, 10)
+//                .map(new Function<Integer, Integer>() {
+//                    @Override
+//                    public Integer apply(Integer integer) throws Exception {
+//                        return integer * 2;
+//                    }
+//                })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread());
+//        intObservable.subscribe(new Observer<Integer>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Integer integer) {
+//                Log.d(TAG, "onNext: " + integer);
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//
+//            }
+//        });
+
+
+        //Buffer Operator
+
+        Observable<Task> bufferObservable = Observable
+                .fromIterable(DataSource.createTasksList())
+                .subscribeOn(Schedulers.io());
+        bufferObservable
+                .buffer(2)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Task>>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onNext(Integer integer) {
-                Log.d(TAG, "onNext: " + integer);
+            public void onNext(List<Task> tasks) {
+                Log.d(TAG, "-------------------------------");
+                for(Task task: tasks){
+                    Log.d(TAG, "onNext: " +  task.getDescription());
+                }
+
             }
 
             @Override
